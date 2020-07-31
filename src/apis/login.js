@@ -7,3 +7,11 @@ export const login = (params) => {
       data: params
     })
   }
+// 微信授权
+export const oauth = (params) => {
+    return http({
+      url: '/api/oauth',
+      method: 'post',
+      data: params
+    })
+  }

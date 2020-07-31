@@ -1,26 +1,48 @@
 <template>
-  <div></div>
+  <div>{{ parmas.code }}</div>
 </template>
 
 <script>
+import { oauth } from "@/apis/login";
 export default {
   data() {
-    return {};
+    return {
+      parmas: {
+        code: "",
+        ty: 1
+      }
+    };
   },
+
+  /* var local = window.location.href; // 获取页面url
+var appid = "wx0c5fe766d97cd585";
+ window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${encodeURIComponent(
+          local
+        )}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`; */
+
   methods: {
     getCode() {
       // 非静默授权，第一次有弹框
-      this.code = "";
+      this.parmas.code = "";
       var local = window.location.href; // 获取页面url
       var appid = "wx0c5fe766d97cd585";
-      this.code = this.getUrlCode().code; // 截取code
-      if (this.code == null || this.code === "") {
+      this.parmas.code = this.getUrlCode().code; // 截取code
+      // alert(JSON.stringify(this.parmas.code));
+      if (this.parmas.code == null || this.parmas.code === "") {
         // 如果没有code，则去请求
-        window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${encodeURIComponent(
-          local
-        )}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`;
+        window.location.replace(
+          `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${encodeURIComponent(
+            local
+          )}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
+        );
       } else {
         // 你自己的业务逻辑
+        this.parmas.code = this.getUrlCode().code;
+        // window.location.replace(
+        //   `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${encodeURIComponent(
+        //     local
+        //   )}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
+        // );
       }
     },
     getUrlCode() {
@@ -38,13 +60,9 @@ export default {
       return theRequest;
     }
   },
+
   mounted() {
-    if (!window.localStorage.getItem("openId")) {
-      // 如果缓存localStorage中没有微信openId，则需用code去后台获取
-      this.getCode();
-    } else {
-      // 别的业务逻辑
-    }
+    this.getCode();
   }
 };
 </script>

@@ -1,11 +1,37 @@
 <template>
   <div id="patient">
+  <van-popup
+      v-model="show"
+      position="right"
+      :style="{ width: '80%', height: '100%' }"
+    >
+      <div class="title">完成情况</div>
+      <ul id="completion" class="clearfix" @click="execution($event)">
+        <li class="active">全部</li>
+        <li>未完成</li>
+        <li>已完成</li>
+      </ul>
+      <div class="title">病种</div>
+      <ul id="disease" class="clearfix" @click="disease($event)">
+        <li class="active">肝癌</li>
+        <li>胃癌</li>
+        <li>口腔癌</li>
+      </ul>
+      <div class="title">BMI</div>
+      <ul id="bmi" class="clearfix" @click="BMI($event)">
+        <li class="active">正常</li>
+        <li>偏瘦</li>
+        <li>偏胖</li>
+      </ul>
+      <van-button type="default" @click="show=false">取消</van-button>
+      <van-button type="info">确定</van-button>
+    </van-popup>
     <van-nav-bar title="患者">
       <template #left>
         <van-icon name="scan" size="20" />
       </template>
       <template #right>
-        <img src="@/assets/images/doctor202007171725 _10.png" alt="" />
+        <img src="@/assets/images/doctor202007171725 _10.png" alt=""  @click="show = true"/>
       </template>
     </van-nav-bar>
     <div class="main">
@@ -95,6 +121,7 @@ export default {
   data() {
     return {
       list: [],
+      show: false,
       loading: false,
       finished: false,
       refreshing: false,
@@ -105,6 +132,39 @@ export default {
     };
   },
   methods: {
+    execution(el) {
+      if (el.target.localName !== "ul") {
+        let doc = document.querySelector("#completion");
+        for (let i = 0; i < doc.children.length; i++) {
+          if (doc.children[i].className) {
+            doc.children[i].setAttribute("class", "");
+          }
+        }
+        el.target.setAttribute("class", "active");
+      }
+    },
+    disease(el) {
+      if (el.target.localName !== "ul") {
+        let doc = document.querySelector("#disease");
+        for (let i = 0; i < doc.children.length; i++) {
+          if (doc.children[i].className) {
+            doc.children[i].setAttribute("class", "");
+          }
+        }
+        el.target.setAttribute("class", "active");
+      }
+    },
+    BMI(el) {
+      if (el.target.localName !== "ul") {
+        let doc = document.querySelector("#bmi");
+        for (let i = 0; i < doc.children.length; i++) {
+          if (doc.children[i].className) {
+            doc.children[i].setAttribute("class", "");
+          }
+        }
+        el.target.setAttribute("class", "active");
+      }
+    },
     detail() {},
     onClickLeft() {
       this.$toast("返回");
@@ -171,6 +231,35 @@ export default {
     img {
       width: 50px;
       height: 52px;
+    }
+  }
+   .van-popup {
+    padding: 10px 20px;
+    .title {
+      margin-bottom: 15px;
+      font-size: 16px;
+      margin-top: 30px;
+    }
+    .van-button {
+      margin-top: 20px;
+      width: 115px;
+      height: 42px;
+      margin-right: 10px;
+    }
+    li {
+      float: left;
+      width: 60px;
+      height: 26px;
+      line-height: 26px;
+      background: rgba(245, 245, 245, 1);
+      border-radius: 4px;
+      margin-right: 7px;
+      text-align: center;
+      &.active {
+        border: 1px solid rgba(69, 137, 237, 1);
+        background: rgba(255, 255, 255, 1);
+        color: rgba(69, 137, 237, 1);
+      }
     }
   }
   .gr {

@@ -1,6 +1,11 @@
 import axios from 'axios' // 引入axios
 import apiConfig from "../../config/api.config"
 import router from '@/router'
+import Vue from 'vue'
+import {
+  Toast
+} from 'vant';
+Vue.use(Toast);
 // 将 aioxs 封装为 vue 的插件
 // create an axios instance
 const service = axios.create({
@@ -9,13 +14,17 @@ const service = axios.create({
   timeout: 10000 // request timeout
 })
 axios.defaults.headers.post['Content-Type'] = 'application/json';
-if (router.history.current.path !== '/login') {
-  // 在请求头中添加 Authorization
-  // 进行局部设置
-  axios.defaults.headers['Authorization'] = window.sessionStorage.getItem('token') || ''
-}
+// console.log(router.history.current.path)
+// axios.defaults.headers['token'] = sessionStorage.getItem('token') || ''
+// if (router.history.current.path !== '/login' && router.history.current.path !== '/WechatAuthorization') {
+//   // 在请求头中添加 Authorization
+//   // 进行局部设置
+// }
 // 在 axios 的拦截器中添加一段内容：
 service.interceptors.request.use(function (config) {
+  if (sessionStorage.getItem("token") != null) {
+    config.headers["token"] = sessionStorage.getItem("token");
+  }
   // 只要在请求非 login 时才需要执行
   if (config.method == 'post') {
     config.params = {
@@ -32,6 +41,7 @@ service.interceptors.response.use(
     //拦截响应，做统一处理 
     switch (response.data.codes) {
       case 401:
+        // Toast('请微信授权后登陆');
         router.push('/WechatAuthorization');
         break;
     }

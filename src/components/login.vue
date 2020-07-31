@@ -16,13 +16,17 @@
             账号
           </div>
           <div class="ipt">
-            <input type="text" v-model="form.username" />
+            <van-field v-model="form.username" placeholder="请输入账号" />
           </div>
           <div class="password">
             密码
           </div>
           <div class="ipt">
-            <input type="password" v-model="form.password" />
+            <van-field
+              type="password"
+              v-model="form.password"
+              placeholder="请输入密码"
+            />
           </div>
           <div class="login">
             <van-button round block type="info" native-type="submit">
@@ -56,7 +60,9 @@ export default {
         login(this.form)
           .then(res => {
             console.log(res);
-            alert(res);
+            this.$router.push("/WechatAuthorization");
+            // sessionStorage.setItem("token", res.data.token);
+            // window.location.href = window.location.origin + window.location.pathname
           })
           .catch(err => {
             this.$toast(err.msg);

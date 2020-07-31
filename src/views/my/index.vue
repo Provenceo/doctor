@@ -90,6 +90,7 @@ export default {};
 
 <style lang="less">
 #my {
+  padding-bottom: 40px;
   text-align: left;
   .van-nav-bar {
     background: url("~@/assets/images/doctor202007171725 _83.png");

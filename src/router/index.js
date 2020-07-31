@@ -8,14 +8,13 @@ Vue.use(Toast);
 var router = new Router({
   // mode: "history",
   routes: [{
-      path: '/login',
-      name: 'login',
-      component: () => import('@/components/login'),
-    },
-    {
       path: '/wechatAuthorization',
       name: 'wechatAuthorization',
       component: () => import('@/components/wechatAuthorization'),
+    }, {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/components/login'),
     },
     {
       path: '/',
@@ -176,19 +175,19 @@ router.beforeEach((to, from, next) => {
   if (to.name !== "SemiLiquidFood" && to.name !== "SoftFood" && to.name !== "newNutritionPrescription" && to.name !== "TakingProducts") {
     localStorage.removeItem("form")
   }
-  //   // 在判断时，需要将 login 路由排除掉
-  //   if (to.meta.requireAuth == true) {
-  //     // 判断用户是否登录:验证 token
-  //     var token = window.sessionStorage.getItem('token')
-  //     if (!token && to.path !== '/404') {
-  //       Toast('您还没有登录，请先登录')
-  //       router.push('/login')
-  //     } else {
-  //       next()
-  //     }
-  //   } else {
-  next()
-  //   }
+  // 在判断时，需要将 login 路由排除掉
+  if (to.meta.requireAuth == true) {
+    // 判断用户是否登录:验证 token
+    var token = window.sessionStorage.getItem('token')
+    if (!token && to.path !== '/404') {
+      Toast('您还未登陆，请登录！')
+      router.push('/login')
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
 })
 
 export default router
