@@ -59,10 +59,8 @@ export default {
       } else {
         login(this.form)
           .then(res => {
-            console.log(res);
-            this.$router.push("/WechatAuthorization");
-            // sessionStorage.setItem("token", res.data.token);
-            // window.location.href = window.location.origin + window.location.pathname
+            sessionStorage.setItem("token", res.data.token);
+            this.$router.push('/')
           })
           .catch(err => {
             this.$toast(err.msg);

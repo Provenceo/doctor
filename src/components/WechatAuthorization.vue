@@ -1,5 +1,5 @@
 <template>
-  <div>{{ parmas.code }}</div>
+  <div></div>
 </template>
 
 <script>
@@ -13,21 +13,13 @@ export default {
       }
     };
   },
-
-  /* var local = window.location.href; // 获取页面url
-var appid = "wx0c5fe766d97cd585";
- window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${encodeURIComponent(
-          local
-        )}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`; */
-
   methods: {
     getCode() {
       // 非静默授权，第一次有弹框
       this.parmas.code = "";
       var local = window.location.href; // 获取页面url
       var appid = "wx0c5fe766d97cd585";
-      this.parmas.code = this.getUrlCode().code; // 截取code
-      // alert(JSON.stringify(this.parmas.code));
+      this.parmas.code = this.getUrlCode("code"); // 截取code
       if (this.parmas.code == null || this.parmas.code === "") {
         // 如果没有code，则去请求
         window.location.replace(
@@ -37,30 +29,46 @@ var appid = "wx0c5fe766d97cd585";
         );
       } else {
         // 你自己的业务逻辑
-        this.parmas.code = this.getUrlCode().code;
-        // window.location.replace(
-        //   `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${encodeURIComponent(
-        //     local
-        //   )}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
-        // );
+        this.parmas.code = this.getUrlCode("code");
       }
     },
-    getUrlCode() {
-      // 截取url中的code方法
-      var url = location.search;
-      this.winUrl = url;
-      var theRequest = new Object();
-      if (url.indexOf("?") != -1) {
-        var str = url.substr(1);
-        var strs = str.split("&");
-        for (var i = 0; i < strs.length; i++) {
-          theRequest[strs[i].split("=")[0]] = strs[i].split("=")[1];
-        }
-      }
-      return theRequest;
+
+    getUrlCode(name) {
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+      var r = window.location.search.substr(1).match(reg);
+      if (r != null) return unescape(r[2]);
+      return null;
     }
   },
-
+  watch: {
+    "parmas.code": {
+      handler(newName, oldName) {
+        if (newName) {
+          oauth({ code: newName, ty: 1 })
+            .then(res => {
+              if (res.data.hasOwnProperty(token)) {
+                sessionStorage.setItem("token", res.data.token);
+                window.location.href =
+                  window.location.origin + window.location.pathname;
+              } else {
+                window.location.href =
+                  window.location.origin + window.location.pathname + "#/login";
+              }
+            })
+            .catch(err => {
+              if (err.codes == 404) {
+                console.log(window.location.origin, window.location.pathname);
+                window.location.href =
+                  window.location.origin + window.location.pathname + "#/login";
+              }
+              // this.$toast(err);
+            });
+        }
+      },
+      immediate: true,
+      deep: true
+    }
+  },
   mounted() {
     this.getCode();
   }

@@ -14,7 +14,7 @@ var router = new Router({
     }, {
       path: '/login',
       name: 'login',
-      component: () => import('@/components/login'),
+      component: () => import('@/components/login')
     },
     {
       path: '/',
@@ -180,8 +180,8 @@ router.beforeEach((to, from, next) => {
     // 判断用户是否登录:验证 token
     var token = window.sessionStorage.getItem('token')
     if (!token && to.path !== '/404') {
-      Toast('您还未登陆，请登录！')
-      router.push('/login')
+      Toast('请微信授权后登陆！')
+      router.push('/WechatAuthorization')
     } else {
       next()
     }
