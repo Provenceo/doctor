@@ -36,9 +36,7 @@ service.interceptors.response.use(
     //拦截响应，做统一处理 
     switch (response.data.codes) {
       case 401:
-        if (!getlocalStorage) {
-          router.push('/WechatAuthorization');
-        }
+        router.push('/WechatAuthorization');
         Toast('请微信授权后登陆');
         break;
     }

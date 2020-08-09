@@ -47,9 +47,9 @@ export default {
           oauth({ code: newName, ty: 1 })
             .then(res => {
               if (res.data.hasOwnProperty(token)) {
-                sessionStorage.setItem("token", res.data.token);
                 window.location.href =
                   window.location.origin + window.location.pathname;
+                sessionStorage.setItem("token", res.data.token);
               } else {
                 window.location.href =
                   window.location.origin + window.location.pathname + "#/login";
