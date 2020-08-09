@@ -46,7 +46,7 @@ export default {
         if (newName) {
           oauth({ code: newName, ty: 1 })
             .then(res => {
-              if (res.data.hasOwnProperty(token)) {
+              if (res.data.token) {
                 window.location.href =
                   window.location.origin + window.location.pathname;
                 sessionStorage.setItem("token", res.data.token);
@@ -56,12 +56,9 @@ export default {
               }
             })
             .catch(err => {
-              if (err.codes == 404) {
-                console.log(window.location.origin, window.location.pathname);
-                window.location.href =
-                  window.location.origin + window.location.pathname + "#/login";
-              }
-              // this.$toast(err);
+              window.location.href =
+                window.location.origin + window.location.pathname + "#/login";
+              this.$toast(err.msg);
             });
         }
       },
